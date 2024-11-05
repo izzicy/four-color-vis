@@ -17,7 +17,7 @@ export function createImageFromMarkings(markings: Int16Array, width: number, hei
             imageData.data[i + 2] = 0;
             imageData.data[i + 3] = 255;
         } else {
-            const weight = 255 / (maxValue * markings[i / 4]);
+            const weight = 255 * (markings[i / 4] / maxValue);
 
             imageData.data[i + 0] = weight;
             imageData.data[i + 1] = 127;
