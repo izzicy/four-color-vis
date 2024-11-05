@@ -91,10 +91,10 @@ class Marker {
 
         return (
             (
-                pixels[index] === 255
-                && pixels[index + 1] === 255
-                && pixels[index + 2] === 255
-            ) || pixels[index + 3] === 0
+                pixels[index] > 240
+                && pixels[index + 1] > 240
+                && pixels[index + 2] > 240
+            ) || pixels[index + 3] < 10
         );
     }
 }
