@@ -1,5 +1,7 @@
+import { promiseTimeout } from '@vueuse/core';
 import { every } from 'lodash-es';
 import { createNanoEvents, Emitter } from 'nanoevents';
+import { MaybeRefOrGetter, toValue } from 'vue';
 
 export const NO_COLOR = 0;
 export const COLOR_1 = 1 << 0;
@@ -15,7 +17,7 @@ export const COLORS = [
 ];
 
 export type CreateFourColorSolverOptions = {
-    stepDelay?: number;
+    stepDelay?: MaybeRefOrGetter<number>;
     edges: Map<number, Set<number>>;
 };
 
@@ -30,7 +32,6 @@ export function createFourColorSolver(options: CreateFourColorSolverOptions) {
     const solver = new FourColorSolver(
         regionMarks,
         edges,
-        emitter,
     );
 
     solver.solve();
@@ -41,17 +42,14 @@ export function createFourColorSolver(options: CreateFourColorSolverOptions) {
 class FourColorSolver {
     protected regionMarks;
     protected edges;
-    protected emtiter;
     protected colors = new Map<number, number>();
 
     public constructor(
         regionMarks: number[],
         edges: Map<number, Set<number>>,
-        emtiter: Emitter,
     ) {
         this.regionMarks = regionMarks;
         this.edges = edges;
-        this.emtiter = emtiter;
     }
 
     public solve() {
@@ -83,5 +81,80 @@ class FourColorSolver {
         }
 
         return false;
+    }
+}
+
+class AsyncFourColorSolver {
+    protected regionMarks;
+    protected edges;
+    protected emitter;
+    protected colors = new Map<number, number>();
+    protected stepDelay;
+
+    public constructor(
+        regionMarks: number[],
+        edges: Map<number, Set<number>>,
+        emitter: Emitter,
+        stepDelay: MaybeRefOrGetter<number>,
+    ) {
+        this.regionMarks = regionMarks;
+        this.edges = edges;
+        this.emitter = emitter;
+        this.stepDelay = stepDelay;
+    }
+
+    public async solve() {
+        await this.dfs(0);
+    }
+
+    public getColors() {
+        return this.colors;
+    }
+
+    protected async dfs(mark: number): Promise<boolean> {
+        const edges = Array.from((this.edges.get(mark) ?? []));
+        let available = ALL_COLORS;
+
+        for (const edge of edges) {
+            available &= ~(this.colors.get(edge) ?? NO_COLOR);
+        }
+
+        for (const color of COLORS) {
+            if (color & available) {
+                await promiseTimeout(toValue(this.stepDelay));
+
+                this.colors.set(mark, color);
+                this.emitter.emit('color-set', {
+                    mark,
+                    color,
+                });
+
+                if (await this.forEveryEdge(edges)) {
+                    return true;
+                }
+
+                await promiseTimeout(toValue(this.stepDelay));
+
+                this.colors.delete(mark);
+                this.emitter.emit('color-unset', {
+                    mark,
+                });
+            }
+        }
+
+        return false;
+    }
+
+    protected async forEveryEdge(edges: number[]): Promise<boolean> {
+        let everyTrue = true;
+
+        for (const edge of edges) {
+            if ((this.colors.has(edge) || await this.dfs(edge)) === false) {
+                everyTrue = false;
+                continue;
+            }
+        }
+
+        return everyTrue;
     }
 }
