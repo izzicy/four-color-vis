@@ -3,15 +3,15 @@ import { toX } from './toX';
 import { toY } from './toY';
 import { toIndex } from './toIndex';
 
-export function resolveCenterPointsFromMarkings(markings: Int16Array, width: number, height: number) {
-    const distances = new Int32Array(markings.length).fill(-1);
-    const marks = uniq(markings);
+export function resolveCenterPointsFromRegions(regions: Int16Array, width: number, height: number) {
+    const distances = new Int32Array(regions.length).fill(-1);
+    const marks = uniq(regions);
     const centerPoints = new Map<number, number>();
 
     for (const mark of marks) {
         centerPoints.set(
             mark,
-            getCenterPointOfMarking(markings, distances, mark, width),
+            getCenterPointOfRegions(regions, distances, mark, width),
         );
     }
 
@@ -19,12 +19,12 @@ export function resolveCenterPointsFromMarkings(markings: Int16Array, width: num
 
 }
 
-function getCenterPointOfMarking(markings: Int16Array, distances: Int32Array, relevantMark: number, width: number) {
+function getCenterPointOfRegions(regions: Int16Array, distances: Int32Array, relevantMark: number, width: number) {
     const queue = [];
     const indicesInSection = [];
 
-    for (let i = 0; i < markings.length; i++) {
-        if (markings[i] === relevantMark) {
+    for (let i = 0; i < regions.length; i++) {
+        if (regions[i] === relevantMark) {
             indicesInSection.push(i);
         }
     }
@@ -38,7 +38,7 @@ function getCenterPointOfMarking(markings: Int16Array, distances: Int32Array, re
             const ny = y + dy;
             const neighbor = toIndex(nx, ny, width);
 
-            if (markings[neighbor] !== relevantMark) {
+            if (regions[neighbor] !== relevantMark) {
                 distances[index] = 0;
                 queue.push(index);
                 break;
@@ -55,7 +55,7 @@ function getCenterPointOfMarking(markings: Int16Array, distances: Int32Array, re
             const nx = x + dx;
             const ny = y + dy;
             const neighbor = toIndex(nx, ny, width);
-            const neighborMark = markings[neighbor];
+            const neighborMark = regions[neighbor];
 
             if (neighborMark === relevantMark && distances[neighbor] === -1) {
                 distances[neighbor] = distances[node] + 1;
@@ -66,8 +66,6 @@ function getCenterPointOfMarking(markings: Int16Array, distances: Int32Array, re
 
     let maxDistance = -1;
     let centerPoint = null;
-
-    console.log(indicesInSection, distances);
 
     for (const index of indicesInSection) {
         if (distances[index] > maxDistance) {

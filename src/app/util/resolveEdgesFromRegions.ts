@@ -2,13 +2,13 @@ import { toIndex } from './toIndex';
 import { toX } from './toX';
 import { toY } from './toY';
 
-export function resolveEdgesFromMarkings(markings: Int16Array, boundaries: Int16Array, width: number, height: number) {
-    const edgeResolver = new EdgeResolver(markings, boundaries, width, height);
+export function resolveEdgesFromRegions(regions: Int16Array, boundaries: Int16Array, width: number, height: number) {
+    const edgeResolver = new EdgeResolver(regions, boundaries, width, height);
     const edges = new Map<number, Set<number>>();
 
     for (let x = 0; x < width; x++) {
         for (let y = 0; y < height; y++) {
-            if ( ! edgeResolver.isVisited(x, y) && markings[toIndex(x, y, width)] >= 0) {
+            if ( ! edgeResolver.isVisited(x, y) && regions[toIndex(x, y, width)] >= 0) {
                 edgeResolver.resolve(x, y, edges);
             }
         }
@@ -18,7 +18,7 @@ export function resolveEdgesFromMarkings(markings: Int16Array, boundaries: Int16
 }
 
 class EdgeResolver {
-    protected markings;
+    protected regions;
     protected boundaries;
     protected pixels;
     protected width;
@@ -26,12 +26,12 @@ class EdgeResolver {
     protected visited;
 
     public constructor(
-        markings: Int16Array,
+        regions: Int16Array,
         boundaries: Int16Array,
         width: number,
         height: number,
     ) {
-        this.markings = markings;
+        this.regions = regions;
         this.boundaries = boundaries;
         this.width = width;
         this.height = height;
@@ -46,7 +46,7 @@ class EdgeResolver {
 
         while (queue.length > 0) {
             const node = queue.shift();
-            const nodeMark = this.markings[node];
+            const nodeMark = this.regions[node];
             const qx = toX(node, this.width);
             const qy = toY(node, this.width);
 
@@ -66,7 +66,7 @@ class EdgeResolver {
                         edges.get(nodeMark).add(boundaryMark);
                     }
 
-                    if (this.markings[neighbor] >= 0) {
+                    if (this.regions[neighbor] >= 0) {
                         queue.push(neighbor);
                         this.visited[neighbor] = 1;
                     }

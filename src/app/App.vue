@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { useFileDialog } from '@vueuse/core';
 import { loadImageData } from './util/loadImageData';
-import { createImageSectionMarkings } from './util/createImageSectionMarkings';
-import { createImageFromMarkings } from './util/createImageFromMarkings';
-import { resolveCenterPointsFromMarkings } from './util/resolveCenterPointsFromMarkings';
+import { createImageRegions } from './util/createImageRegions';
+import { createImageFromRegions } from './util/createImageFromRegions';
+import { resolveCenterPointsFromRegions } from './util/resolveCenterPointsFromRegions';
 import { createGraphImage } from './util/createGraphImage';
 import { ref } from 'vue';
-import { resolveEdgesFromMarkings } from './util/resolveEdgesFromMarkings';
-import { uniq } from 'lodash-es';
+import { resolveEdgesFromRegions } from './util/resolveEdgesFromRegions';
 
 const url1 = ref('');
 const url2 = ref('');
@@ -26,19 +25,19 @@ onChange(async (files) => {
         } = await loadImageData(files[0]);
 
         const {
-            markings,
+            regions,
             boundaries,
-        } = createImageSectionMarkings(pixels, image.width, image.height);
+        } = createImageRegions(pixels, image.width, image.height);
 
-        const centerPoints = resolveCenterPointsFromMarkings(markings, image.width, image.height);
-        const edges = resolveEdgesFromMarkings(markings, boundaries, image.width, image.height);
+        const centerPoints = resolveCenterPointsFromRegions(regions, image.width, image.height);
+        const edges = resolveEdgesFromRegions(regions, boundaries, image.width, image.height);
 
         centerPoints.delete(-1);
 
         console.log(centerPoints, edges);
 
-        url1.value = (await createImageFromMarkings(markings, image.width, image.height)).src;
-        url2.value = (await createImageFromMarkings(boundaries, image.width, image.height)).src;
+        url1.value = (await createImageFromRegions(regions, image.width, image.height)).src;
+        url2.value = (await createImageFromRegions(boundaries, image.width, image.height)).src;
         url3.value = (await createGraphImage(centerPoints, edges, image.width, image.height)).src;
     }
 });
