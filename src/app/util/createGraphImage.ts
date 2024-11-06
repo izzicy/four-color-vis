@@ -33,7 +33,7 @@ export function createGraphImage(nodes: Map<number, number>, edges: Map<number, 
         ctx.arc(
             toX(index, width),
             toY(index, width),
-            15,
+            4,
             0,
             2 * Math.PI,
         );
