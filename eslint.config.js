@@ -18,11 +18,11 @@ module.exports = [
     files: ['**/*.vue'],
     languageOptions: {
       parserOptions: { parser: require('@typescript-eslint/parser') },
+      indent: ["error", 4],
     },
   },
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx', '**/*.vue'],
     rules: { 'vue/multi-word-component-names': 'off' },
-    indent: ["error", 4],
   },
 ];
