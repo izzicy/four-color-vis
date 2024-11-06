@@ -2,7 +2,7 @@ import { toIndex } from './toIndex';
 import { toX } from './toX';
 import { toY } from './toY';
 
-export function createImageSectionMarkings(pixels: Uint8ClampedArray, width: number, height: number) {
+export function createImageRegions(pixels: Uint8ClampedArray, width: number, height: number) {
     const marker = new Marker(pixels, width, height);
     let marking = 0;
 
@@ -16,7 +16,7 @@ export function createImageSectionMarkings(pixels: Uint8ClampedArray, width: num
     }
 
     return {
-        markings: marker.getMarkings(),
+        regions: marker.getMarkings(),
         boundaries: marker.getBoundaries(),
     };
 }
