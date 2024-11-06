@@ -3,7 +3,7 @@ import { toX } from './toX';
 import { toY } from './toY';
 import { toIndex } from './toIndex';
 
-export function resolveCenterPointsFromRegions(regions: Int16Array, width: number, height: number) {
+export function resolveCenterPointsFromRegions(regions: Int16Array, regionMap: Map<number, Int32Array>, width: number) {
     const distances = new Int32Array(regions.length).fill(-1);
     const marks = uniq(regions);
     const centerPoints = new Map<number, number>();
@@ -11,7 +11,7 @@ export function resolveCenterPointsFromRegions(regions: Int16Array, width: numbe
     for (const mark of marks) {
         centerPoints.set(
             mark,
-            getCenterPointOfRegions(regions, distances, mark, width),
+            getCenterPointOfRegions(regions, (regionMap.get(mark) ?? new Int32Array()), distances, mark, width),
         );
     }
 
@@ -19,17 +19,10 @@ export function resolveCenterPointsFromRegions(regions: Int16Array, width: numbe
 
 }
 
-function getCenterPointOfRegions(regions: Int16Array, distances: Int32Array, relevantMark: number, width: number) {
+function getCenterPointOfRegions(regions: Int16Array, regionMap: Int32Array, distances: Int32Array, relevantMark: number, width: number) {
     const queue = [];
-    const indicesInSection = [];
 
-    for (let i = 0; i < regions.length; i++) {
-        if (regions[i] === relevantMark) {
-            indicesInSection.push(i);
-        }
-    }
-
-    for (const index of indicesInSection) {
+    for (const index of regionMap) {
         const x = toX(index, width);
         const y = toY(index, width);
 
@@ -65,9 +58,9 @@ function getCenterPointOfRegions(regions: Int16Array, distances: Int32Array, rel
     }
 
     let maxDistance = -1;
-    let centerPoint = null;
+    let centerPoint = -1;
 
-    for (const index of indicesInSection) {
+    for (const index of regionMap) {
         if (distances[index] > maxDistance) {
             maxDistance = distances[index];
             centerPoint = index;
