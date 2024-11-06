@@ -7,6 +7,7 @@ import { resolveCenterPointsFromRegions } from './util/resolveCenterPointsFromRe
 import { createGraphImage } from './util/createGraphImage';
 import { ref } from 'vue';
 import { resolveEdgesFromRegions } from './util/resolveEdgesFromRegions';
+import { createRegionIndexMap } from './util/createRegionIndexGroups';
 
 const url1 = ref('');
 const url2 = ref('');
@@ -18,7 +19,7 @@ const { files, open, reset, onCancel, onChange } = useFileDialog({
 });
 
 onChange(async (files) => {
-    if (files[0]) {
+    if (files && files[0]) {
         const {
             image,
             pixels,
@@ -29,7 +30,9 @@ onChange(async (files) => {
             boundaries,
         } = createImageRegions(pixels, image.width, image.height);
 
-        const centerPoints = resolveCenterPointsFromRegions(regions, image.width, image.height);
+        const regionMap = createRegionIndexMap(regions);
+
+        const centerPoints = resolveCenterPointsFromRegions(regions, regionMap, image.width);
         const edges = resolveEdgesFromRegions(regions, boundaries, image.width, image.height);
 
         centerPoints.delete(-1);
