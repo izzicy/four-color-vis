@@ -46,7 +46,9 @@ onChange(async (files) => {
 
 <template>
     <div>
-        <button type="button" @click="open">Choose file</button>
+        <button type="button" @click="() => open()">
+            Choose file
+        </button>
         <img :src="url1" alt="">
         <img :src="url2" alt="">
         <img :src="url3" alt="">
