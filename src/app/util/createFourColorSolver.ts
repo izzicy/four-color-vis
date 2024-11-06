@@ -18,16 +18,17 @@ export const COLORS = [
 
 export type CreateFourColorSolverOptions = {
     stepDelay?: MaybeRefOrGetter<number>;
+    emitter?: Emitter;
     edges: Map<number, Set<number>>;
 };
 
 export function createFourColorSolver(options: CreateFourColorSolverOptions) {
     const {
         stepDelay = 0,
+        emitter = createNanoEvents(),
         edges,
     } = options;
 
-    const emitter = createNanoEvents();
     const regionMarks = Array.from(edges.keys());
     const solver = new FourColorSolver(
         regionMarks,
