@@ -20,7 +20,6 @@ export function resolveEdgesFromRegions(regions: Int16Array, boundaries: Int16Ar
 class EdgeResolver {
     protected regions;
     protected boundaries;
-    protected pixels;
     protected width;
     protected height;
     protected visited;
@@ -63,7 +62,12 @@ class EdgeResolver {
                             edges.set(nodeMark, new Set());
                         }
 
-                        edges.get(nodeMark).add(boundaryMark);
+                        if ( ! edges.has(boundaryMark)) {
+                            edges.set(boundaryMark, new Set());
+                        }
+
+                        edges.get(nodeMark)?.add(boundaryMark);
+                        edges.get(boundaryMark)?.add(nodeMark);
                     }
 
                     if (this.regions[neighbor] >= 0) {
