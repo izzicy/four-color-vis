@@ -17,7 +17,7 @@ const url3 = ref('');
 const url4 = ref('');
 
 const { files, open } = useFileDialog({
-    accept: 'image/*', // Set to accept only image files
+    accept: 'image/*',
     multiple: false,
 });
 
