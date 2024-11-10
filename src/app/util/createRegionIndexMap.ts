@@ -1,6 +1,6 @@
 import { countBy } from 'lodash-es';
 
-export function createRegionIndexMap(regions: Int16Array): Map<number, Int32Array> {
+export function createRegionIndexMap(regions: Int32Array): Map<number, Int32Array> {
     const indexMap = new Map<number, Int32Array>();
     const counts = countBy(regions);
     const regionCounts = new Map<number, number>();

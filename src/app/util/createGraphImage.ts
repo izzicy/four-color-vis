@@ -8,7 +8,8 @@ export function createGraphImage(nodes: Map<number, number>, edges: Map<number, 
     canvas.width = width;
     canvas.height = height;
 
-    ctx.strokeStyle = '1px solid blue';
+    ctx.strokeStyle = 'blue';
+    ctx.lineWidth = 1;
     ctx.fillStyle = 'red';
 
     for (const [mark, index] of nodes.entries()) {
@@ -28,12 +29,12 @@ export function createGraphImage(nodes: Map<number, number>, edges: Map<number, 
         }
     }
 
-    for (const index of nodes.values()) {
+    for (const [mark, index] of nodes.entries()) {
         ctx.beginPath();
         ctx.arc(
             toX(index, width),
             toY(index, width),
-            4,
+            3,
             0,
             2 * Math.PI,
         );

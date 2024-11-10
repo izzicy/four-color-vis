@@ -2,7 +2,7 @@ import { toIndex } from './toIndex';
 import { toX } from './toX';
 import { toY } from './toY';
 
-export function resolveEdgesFromRegions(regions: Int16Array, boundaries: Int16Array, width: number, height: number) {
+export function resolveEdgesFromRegions(regions: Int32Array, boundaries: Int32Array, width: number, height: number) {
     const edgeResolver = new EdgeResolver(regions, boundaries, width, height);
     const edges = new Map<number, Set<number>>();
 
@@ -25,8 +25,8 @@ class EdgeResolver {
     protected visited;
 
     public constructor(
-        regions: Int16Array,
-        boundaries: Int16Array,
+        regions: Int32Array,
+        boundaries: Int32Array,
         width: number,
         height: number,
     ) {

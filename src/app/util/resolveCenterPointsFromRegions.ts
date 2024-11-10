@@ -3,7 +3,7 @@ import { toX } from './toX';
 import { toY } from './toY';
 import { toIndex } from './toIndex';
 
-export function resolveCenterPointsFromRegions(regions: Int16Array, regionMap: Map<number, Int32Array>, width: number) {
+export function resolveCenterPointsFromRegions(regions: Int32Array, regionMap: Map<number, Int32Array>, width: number) {
     const distances = new Int32Array(regions.length).fill(-1);
     const marks = uniq(regions);
     const centerPoints = new Map<number, number>();
@@ -19,7 +19,7 @@ export function resolveCenterPointsFromRegions(regions: Int16Array, regionMap: M
 
 }
 
-function getCenterPointOfRegions(regions: Int16Array, regionMap: Int32Array, distances: Int32Array, relevantMark: number, width: number) {
+function getCenterPointOfRegions(regions: Int32Array, regionMap: Int32Array, distances: Int32Array, relevantMark: number, width: number) {
     const queue = [];
 
     for (const index of regionMap) {

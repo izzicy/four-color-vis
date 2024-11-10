@@ -2,8 +2,8 @@ import { toIndex } from './toIndex';
 import { toX } from './toX';
 import { toY } from './toY';
 
-export function createImageRegions(pixels: Uint8ClampedArray, width: number, height: number) {
-    const marker = new Marker(pixels, width, height);
+export function createImageRegions(pixels: Uint8ClampedArray, width: number, height: number, borderThreshold: number) {
+    const marker = new Marker(pixels, width, height, borderThreshold);
     let marking = 0;
 
     for (let x = 0; x < width; x++) {
@@ -28,18 +28,21 @@ class Marker {
     protected visited;
     protected marking;
     protected boundaries;
+    protected borderThreshold;
 
     public constructor(
         pixels: Uint8ClampedArray,
         width: number,
         height: number,
+        borderThreshold: number,
     ) {
         this.pixels = pixels;
         this.width = width;
         this.height = height;
         this.visited = new Int8Array(height * width);
-        this.marking = new Int16Array(height * width).fill(-1);
-        this.boundaries = new Int16Array(height * width).fill(-1);
+        this.marking = new Int32Array(height * width).fill(-1);
+        this.boundaries = new Int32Array(height * width).fill(-1);
+        this.borderThreshold = borderThreshold;
     }
 
     public mark(x: number, y: number, marking: number) {
@@ -88,12 +91,13 @@ class Marker {
     public isPixelWhite(x: number, y: number) {
         const pixels = this.pixels;
         const index = toIndex(x, y, this.width) * 4;
+        const threshold = this.borderThreshold * 255;
 
         return (
             (
-                pixels[index] > 240
-                && pixels[index + 1] > 240
-                && pixels[index + 2] > 240
+                pixels[index] >= threshold
+                && pixels[index + 1] >= threshold
+                && pixels[index + 2] >= threshold
             ) || pixels[index + 3] < 10
         );
     }

@@ -1,6 +1,6 @@
 import * as _ from 'lodash-es';
 
-export function createImageFromRegions(regions: Int16Array, width: number, height: number) {
+export function createImageFromRegions(regions: Int32Array, width: number, height: number) {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext("2d");
     const imageData = ctx.createImageData(width, height);
