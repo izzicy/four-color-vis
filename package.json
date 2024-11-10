@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "start": "nx serve",
-    "build": "nx build",
+    "build": "nx build --base=/four-color-vis",
     "test": "nx test",
     "deploy": "gh-pages -d ./dist/four-color-vis"
   },
