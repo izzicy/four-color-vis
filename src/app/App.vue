@@ -120,7 +120,7 @@ watch([image, pixels], async ([imageValue, pixelsValue]) => {
                 <div class="col">
                     <label for="time-range" class="form-label">Animation duration</label> {{ stepDelay / 1000 }}s
                     <br>
-                    <input v-model="stepDelay" min="20" max="2000" type="range" class="form-range w-auto" id="time-range">
+                    <input v-model="stepDelay" min="5" max="2000" type="range" class="form-range w-auto" id="time-range">
                 </div>
 
                 <div class="col">
