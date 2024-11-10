@@ -22,14 +22,10 @@ export function useColoredRegionDrawer(options: UseColoredRegionDrawerOptions) {
     const ctx = computed(() => toValue(canvas)?.getContext("2d"));
 
     const onColorSet = ({ mark, color }: { mark: number; color: number; }) => {
-        console.log('set color', mark, color, drawer);
-
         drawer.value?.setRegionColor(mark, color);
     };
 
     const onColorUnset = ({ mark }: { mark: number; }) => {
-        console.log('unset color');
-
         drawer.value?.unsetRegionColor(mark);
     };
 

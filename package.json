@@ -4,8 +4,9 @@
   "license": "MIT",
   "scripts": {
     "start": "nx serve",
-    "build": "nx build",
-    "test": "nx test"
+    "build": "nx build --base=/four-color-vis",
+    "test": "nx test",
+    "deploy": "gh-pages -d ./dist/four-color-vis"
   },
   "private": true,
   "dependencies": {
@@ -35,6 +36,7 @@
     "eslint": "^9.8.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-vue": "^9.16.1",
+    "gh-pages": "^6.2.0",
     "jsdom": "~22.1.0",
     "nx": "20.0.8",
     "prettier": "^2.6.2",

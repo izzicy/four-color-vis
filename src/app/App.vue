@@ -129,6 +129,15 @@ watch([image, pixels], async ([imageValue, pixelsValue]) => {
                     <input v-model="borderThreshold" min="0.01" max="1" step="0.01" type="range" class="form-range w-auto" id="border-threshold">
                 </div>
             </div>
+            <div class="row">
+                <div class="col text-center">
+                    <i>
+                        <small>
+                            Note: the tool works best for images with one-pixel thick region borders and no anti-aliasing.
+                        </small>
+                    </i>
+                </div>
+            </div>
         </div>
     </div>
 </template>
