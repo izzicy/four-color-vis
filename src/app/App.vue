@@ -120,13 +120,22 @@ watch([image, pixels], async ([imageValue, pixelsValue]) => {
                 <div class="col">
                     <label for="time-range" class="form-label">Animation duration</label> {{ stepDelay / 1000 }}s
                     <br>
-                    <input v-model="stepDelay" min="20" max="2000" type="range" class="form-range w-auto" id="time-range">
+                    <input v-model="stepDelay" min="5" max="2000" type="range" class="form-range w-auto" id="time-range">
                 </div>
 
                 <div class="col">
                     <label for="border-threshold" class="form-label">Border threshold</label> {{ Math.round(borderThreshold * 100) }}%
                     <br>
                     <input v-model="borderThreshold" min="0.01" max="1" step="0.01" type="range" class="form-range w-auto" id="border-threshold">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-center">
+                    <i>
+                        <small>
+                            Note: the tool works best for images with one-pixel thick region borders and no anti-aliasing.
+                        </small>
+                    </i>
                 </div>
             </div>
         </div>
