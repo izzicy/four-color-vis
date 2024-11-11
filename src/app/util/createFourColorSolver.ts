@@ -63,16 +63,13 @@ class FourColorSolver {
 
         while (stackIndex < this.regionMarks.length) {
             const mark = this.regionMarks[stackIndex];
-            const edges = Array.from((this.edges.get(mark) ?? []));
             let available = ALL_COLORS;
 
-            for (const edge of edges) {
+            for (const edge of (this.edges.get(mark) ?? [])) {
                 available &= ~(this.colors.get(edge) ?? NO_COLOR);
             }
 
-            const colorIndex = currentColors[stackIndex] >= 0 ? currentColors[stackIndex] + 1 : 0;
-
-            currentColors[stackIndex] = colorIndex;
+            const colorIndex = currentColors[stackIndex] + 1;
 
             if (colorIndex + 1 > COLORS.length) {
                 this.colors.delete(mark);
