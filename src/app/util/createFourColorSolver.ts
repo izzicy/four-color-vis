@@ -69,7 +69,7 @@ class FourColorSolver {
                 available &= ~(this.colors.get(edge) ?? NO_COLOR);
             }
 
-            const colorIndex = currentColors[stackIndex] + 1;
+            const colorIndex = ++currentColors[stackIndex];
 
             if (colorIndex + 1 > COLORS.length) {
                 this.colors.delete(mark);
